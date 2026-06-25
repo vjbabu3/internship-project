@@ -1,0 +1,71 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+# from tkinter import Tk, filedialog # Removed as it causes TclError in Colab
+
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# The Tkinter file dialog is not supported in Colab's headless environment.
+# Please upload your CSV file directly or provide its path.
+# Option 1: Upload the file
+from google.colab import files
+import io
+
+print("Please upload your 'creditcard.csv' file.")
+uploaded = files.upload()
+
+# Assuming the file uploaded is 'creditcard.csv'
+# If your file has a different name, please adjust 'filename' accordingly
+filename = list(uploaded.keys())[0]
+data = pd.read_csv(io.BytesIO(uploaded[filename]))
+
+# Option 2: If the file is already in your Colab files or Google Drive,
+# uncomment the line below and replace 'your_file_path.csv' with the actual path.
+# For example, if you've mounted Google Drive:
+# from google.colab import drive
+# drive.mount('/content/drive')
+# file_path = '/content/drive/MyDrive/path/to/your_file.csv'
+# data = pd.read_csv(file_path)
+
+print("Dataset Loaded Successfully!")
+print("Shape:", data.shape)
+
+# Features and Target
+X = data.drop('Class', axis=1)
+y = data['Class']
+
+# Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42,
+    stratify=y
+)
+
+# Train Model
+model = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+
+# Predictions
+y_pred = model.predict(X_test)
+
+# Results
+print("\nAccuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+
+plt.figure(figsize=(6,4))
+sns.heatmap(cm, annot=True, fmt='d')
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
