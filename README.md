@@ -29,14 +29,14 @@ The project demonstrates a complete machine learning workflow, including data pr
 
 
  📂 Project Structure
-
+```
 Credit-Card-Fraud-Detection/
 │
 ├── creditcard_sample.csv
 ├── fraud_detection.ipynb
 ├── README.md
 └── requirements.txt
-
+```
  📊 Dataset
 
 The dataset contains credit card transaction records with anonymized features.
